@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <vector>
+#include "termcolor.hpp"
 #define SIZE 81
 using namespace std;
 
@@ -92,7 +93,15 @@ int main()
 
     for (int i = 0; i < SIZE; i++)
     {
-        for (int j = 0; j < SIZE; j++) {cout << curr_gen[j];} cout << endl;
+        for (int j = 0; j < SIZE; j++) 
+        {
+            if (curr_gen[j])
+                cout << termcolor::reset << " ";
+            else
+                cout << termcolor::on_white << " ";
+        } 
+        cout << endl;
+        
         update_row(rule_fifty, curr_gen, next_gen);
         copy(next_gen, next_gen + SIZE, curr_gen);
         fill(next_gen, next_gen + SIZE, 0);
