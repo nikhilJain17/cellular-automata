@@ -66,33 +66,34 @@ void update_row(vector<Rule> rules, int curr_gen[], int next_gen[])
 
 int main() 
 {
-    vector<Rule> rules;
     int curr_gen[SIZE] = {0};
+    curr_gen[41] = 1;
     int next_gen[SIZE] = {0};
 
-    Rule r1(0,0,0,1);
-    Rule r2(0,0,1,1);
-    Rule r3(1,0,0,1);
-    Rule r4(1,0,1,1);
 
-    Rule ar1(1,1,1,0);
-    Rule ar2(1,1,0,0);
-    Rule ar3(0,1,1,0);
-    Rule ar4(0,1,0,0);
+    vector<Rule> rule_fifty;
+    Rule r1(1,1,1,0);
+    Rule r2(1,1,0,0);
+    Rule r3(1,0,1,1);
+    Rule r4(1,0,0,1);
+    Rule r5(0,1,1,0);
+    Rule r6(0,1,0,0);
+    Rule r7(0,0,1,1);
+    Rule r8(0,0,0,0);
 
-    rules.push_back(r1);
-    rules.push_back(r2);
-    rules.push_back(r3);
-    rules.push_back(r4);
-    rules.push_back(ar1);
-    rules.push_back(ar2);
-    rules.push_back(ar3);
-    rules.push_back(ar4);
+    rule_fifty.push_back(r1);
+    rule_fifty.push_back(r2);
+    rule_fifty.push_back(r3);
+    rule_fifty.push_back(r4);
+    rule_fifty.push_back(r5);
+    rule_fifty.push_back(r6);
+    rule_fifty.push_back(r7);
+    rule_fifty.push_back(r8);
 
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < SIZE; i++)
     {
         for (int j = 0; j < SIZE; j++) {cout << curr_gen[j];} cout << endl;
-        update_row(rules, curr_gen, next_gen);
+        update_row(rule_fifty, curr_gen, next_gen);
         copy(next_gen, next_gen + SIZE, curr_gen);
         fill(next_gen, next_gen + SIZE, 0);
     }
