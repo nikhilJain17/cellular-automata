@@ -5,28 +5,10 @@
 #include <iostream>
 #include <vector>
 #include "termcolor.hpp"
-#define SIZE 81
+#include "rules.hpp"
+#define SIZE 178
+#define NUM_ITER 1000
 using namespace std;
-
-class Rule 
-{
-    private:
-        int left, middle, right, next;
-    public:
-        Rule (int left, int middle, int right, int next);
-        int getLeft() { return left; }
-        int getMiddle() { return middle; }
-        int getRight() { return right; }
-        int getNext() { return next; }
-};
-
-Rule::Rule(int l, int m, int r, int n)
-{
-    left = l;
-    middle = m;
-    right = r;
-    next = n;
-}
 
 // try a single rule on a neighborhood
 bool rule_applies(Rule rule, int left, int curr, int right) 
@@ -65,44 +47,33 @@ void update_row(vector<Rule> rules, int curr_gen[], int next_gen[])
 
 }
 
+void print_row(int cells[])
+{
+    for (int j = 0; j < SIZE; j++) 
+    {
+        usleep(300);
+        if (cells[j])
+            cout << termcolor::yellow << "•" << termcolor::reset;
+        else
+            cout << termcolor::dark << " " << termcolor::reset;
+    } 
+    cout << endl; 
+}
+
 int main() 
 {
     int curr_gen[SIZE] = {0};
-    curr_gen[41] = 1;
+    curr_gen[(int) (SIZE / 2)] = 1;
     int next_gen[SIZE] = {0};
 
+    int rule_num = 0;
+    cout << "Which rule? 0-255: ";
+    cin >> rule_num;
 
-    vector<Rule> rule_fifty;
-    Rule r1(1,1,1,0);
-    Rule r2(1,1,0,0);
-    Rule r3(1,0,1,1);
-    Rule r4(1,0,0,1);
-    Rule r5(0,1,1,0);
-    Rule r6(0,1,0,0);
-    Rule r7(0,0,1,1);
-    Rule r8(0,0,0,0);
-
-    rule_fifty.push_back(r1);
-    rule_fifty.push_back(r2);
-    rule_fifty.push_back(r3);
-    rule_fifty.push_back(r4);
-    rule_fifty.push_back(r5);
-    rule_fifty.push_back(r6);
-    rule_fifty.push_back(r7);
-    rule_fifty.push_back(r8);
-
-    for (int i = 0; i < SIZE; i++)
+    for (int i = 0; i < NUM_ITER; i++)
     {
-        for (int j = 0; j < SIZE; j++) 
-        {
-            if (curr_gen[j])
-                cout << termcolor::reset << " ";
-            else
-                cout << termcolor::on_white << " ";
-        } 
-        cout << endl;
-        
-        update_row(rule_fifty, curr_gen, next_gen);
+        print_row(curr_gen);
+        update_row(generate_rule(rule_num), curr_gen, next_gen);
         copy(next_gen, next_gen + SIZE, curr_gen);
         fill(next_gen, next_gen + SIZE, 0);
     }
