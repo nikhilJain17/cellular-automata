@@ -4,10 +4,10 @@
 
 #include <iostream>
 #include <vector>
+#include <sys/ioctl.h>
+
 #include "termcolor.hpp"
 #include "rules.hpp"
-#define SIZE 178
-#define NUM_ITER 1000
 using namespace std;
 
 // try a single rule on a neighborhood
@@ -36,7 +36,7 @@ int update_cell(vector<Rule> rules, int left, int curr, int right)
 }
 
 // update a row
-void update_row(vector<Rule> rules, int curr_gen[], int next_gen[])
+void update_row(vector<Rule> rules, int curr_gen[], int next_gen[], const int SIZE)
 {
     for (int i = 0; i < SIZE; i++)
     {
@@ -47,11 +47,10 @@ void update_row(vector<Rule> rules, int curr_gen[], int next_gen[])
 
 }
 
-void print_row(int cells[])
-{
+void print_row(int cells[], const int SIZE)
+{        
     for (int j = 0; j < SIZE; j++) 
     {
-        usleep(300);
         if (cells[j])
             cout << termcolor::yellow << "•" << termcolor::reset;
         else
@@ -60,20 +59,41 @@ void print_row(int cells[])
     cout << endl; 
 }
 
+int get_window_size()
+{
+     struct winsize size;
+    ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
+
+    int temp = 80;
+    if (size.ws_col > 0) 
+        temp = size.ws_col;
+    
+    return temp;
+}
+
 int main() 
 {
-    int curr_gen[SIZE] = {0};
-    curr_gen[(int) (SIZE / 2)] = 1;
-    int next_gen[SIZE] = {0};
+    const int SIZE = get_window_size();
 
-    int rule_num = 0;
-    cout << "Which rule? 0-255: ";
-    cin >> rule_num;
-
-    for (int i = 0; i < NUM_ITER; i++)
+    int curr_gen[SIZE], next_gen[SIZE];
+    for (int i = 0; i < SIZE; i++)
     {
-        print_row(curr_gen);
-        update_row(generate_rule(rule_num), curr_gen, next_gen);
+        curr_gen[i] = 0;
+        next_gen[i] = 0;
+    }
+    curr_gen[(int) (SIZE / 2)] = 1;
+
+    int rule_num = -1;
+    while (rule_num < 0 || rule_num > 255) {
+        cout << "Which rule? 0-255: ";
+        cin >> rule_num;
+    }
+
+    while (true)
+    {
+        usleep(75000);
+        print_row(curr_gen, SIZE);
+        update_row(generate_rule(rule_num), curr_gen, next_gen, SIZE);
         copy(next_gen, next_gen + SIZE, curr_gen);
         fill(next_gen, next_gen + SIZE, 0);
     }
