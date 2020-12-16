@@ -3,7 +3,5 @@ Cellular automata are systems of cells that can be either alive or dead, and are
 
 This is an example of a 1 dimensional cellular automata
 
-## Setup and Usage
-All the simulations
-
 ## Examples
+Check out demos here: https://twitter.com/njain_23/status/1291213869835223040
